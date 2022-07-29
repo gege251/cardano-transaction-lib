@@ -15,8 +15,10 @@ import Wallet
   , Wallet(Gero, Nami)
   , isGeroAvailable
   , isNamiAvailable
+  , isEternlAvailable
   , mkGeroWalletAff
   , mkNamiWalletAff
+  , mkEternlWalletAff
   ) as Wallet
 import Wallet (mkKeyWallet)
 import Wallet.Key (KeyWallet, privateKeysToKeyWallet) as Wallet

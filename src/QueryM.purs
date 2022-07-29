@@ -174,7 +174,11 @@ import Types.PubKeyHash (PaymentPubKeyHash, PubKeyHash, StakePubKeyHash)
 import Types.Scripts (PlutusScript)
 import Types.UsedTxOuts (newUsedTxOuts, UsedTxOuts)
 import Untagged.Union (asOneOf)
-import Wallet (Wallet(Gero, Nami, Eternl, KeyWallet), Cip30Connection, Cip30Wallet)
+import Wallet
+  ( Wallet(Gero, Nami, Eternl, KeyWallet)
+  , Cip30Connection
+  , Cip30Wallet
+  )
 
 -- This module defines an Aff interface for Ogmios Websocket Queries
 -- Since WebSockets do not define a mechanism for linking request/response
@@ -326,16 +330,16 @@ getWalletAddress :: QueryM (Maybe Address)
 getWalletAddress = do
   networkId <- asks _.networkId
   withMWalletAff case _ of
-    Nami nami     -> callCip30Wallet nami _.getWalletAddress
-    Gero gero     -> callCip30Wallet gero _.getWalletAddress
+    Nami nami -> callCip30Wallet nami _.getWalletAddress
+    Gero gero -> callCip30Wallet gero _.getWalletAddress
     Eternl eternl -> callCip30Wallet eternl _.getWalletAddress
     KeyWallet kw -> Just <$> kw.address networkId
 
 getWalletCollateral :: QueryM (Maybe (Array TransactionUnspentOutput))
 getWalletCollateral = do
   mbCollateralUTxOs <- withMWalletAff case _ of
-    Nami nami     -> callCip30Wallet nami _.getCollateral
-    Gero gero     -> callCip30Wallet gero _.getCollateral
+    Nami nami -> callCip30Wallet nami _.getCollateral
+    Gero gero -> callCip30Wallet gero _.getCollateral
     Eternl eternl -> callCip30Wallet eternl _.getCollateral
     KeyWallet _ -> liftEffect $ throw "Not implemented"
   for_ mbCollateralUTxOs \collateralUTxOs -> do
@@ -357,8 +361,8 @@ getWalletCollateral = do
 signTransaction
   :: Transaction.Transaction -> QueryM (Maybe Transaction.Transaction)
 signTransaction tx = withMWalletAff case _ of
-  Nami nami     -> callCip30Wallet nami \nw -> flip nw.signTx tx
-  Gero gero     -> callCip30Wallet gero \nw -> flip nw.signTx tx
+  Nami nami -> callCip30Wallet nami \nw -> flip nw.signTx tx
+  Gero gero -> callCip30Wallet gero \nw -> flip nw.signTx tx
   Eternl eternl -> callCip30Wallet eternl \nw -> flip nw.signTx tx
   KeyWallet kw -> Just <$> kw.signTx tx
 
