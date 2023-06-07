@@ -1681,7 +1681,7 @@ in {
   buildSpagoStyle = pkgs.writeShellScriptBin "build-spago-style" ''
       set -e
       echo building project...
-      purs compile ${builtins.toString (builtins.map getGlob (builtins.attrValues inputs))} "$@"
+      purs compile ${builtins.toString (builtins.map getGlob (builtins.attrValues inputs))} "$@" -gsourcemaps,js
       echo done.
   '';
 
@@ -1689,7 +1689,7 @@ in {
       set -e
       echo building project using sources from nix store...
       purs compile ${builtins.toString (
-        builtins.map getStoreGlob (builtins.attrValues inputs))} "$@"
+        builtins.map getStoreGlob (builtins.attrValues inputs))} "$@" -gsourcemaps,js
       echo done.
   '';
 
@@ -1707,7 +1707,7 @@ in {
         purs compile "$src/**/*.purs" ${builtins.toString
           (builtins.map
             (x: ''"${x.outPath}/src/**/*.purs"'')
-            (builtins.attrValues inputs))}
+            (builtins.attrValues inputs))} -gsourcemaps,js
         mv output $out
       '';
     };

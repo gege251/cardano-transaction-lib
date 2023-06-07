@@ -227,7 +227,7 @@ let
       # (idea taken from `plutus-playground-client`)
       ''
         cd ${project}
-        ${nodejs}/bin/node -e 'require("./output/${testMain}").main()'
+        ${nodejs}/bin/node -e 'require("./output/${testMain}").main()' --enable-source-maps
         touch $out
       '';
 
